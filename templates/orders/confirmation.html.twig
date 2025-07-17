@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de commande{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary">Merci pour votre commande, {{ user.name }} !</h1>
+            <p class="lead text-muted">Votre commande a été enregistrée avec succès</p>
+        </div>
+
+        <h2 class="h3 mb-4 pb-2 border-bottom">Vos commandes récentes</h2>
+
+        {% if orders is empty %}
+            <div class="alert alert-info">Vous n'avez passé aucune commande.</div>
+        {% else %}
+            {% for order in orders %}
+                <div class="card mb-5 border-0 shadow-lg rounded-3 overflow-hidden">
+                    <div class="card-header bg-primary text-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="h5 mb-0">Commande #{{ order.id }}</strong>
+                            <span class="badge bg-light text-dark">{{ order.createdAt|date('d/m/Y H:i') }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded">
+                                    <h5 class="mb-3">Informations client</h5>
+                                    <p class="mb-1"><strong>Nom :</strong> {{ order.customer.firstName }} {{ order.customer.lastName }}</p>
+                                    <p class="mb-0"><strong>Pays :</strong> {{ order.customer.country }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded">
+                                    <h5 class="mb-3">Résumé de commande</h5>
+                                    <p class="mb-1"><strong>Sous-total :</strong> {{ order.subtotal }} TND</p>
+                                    <p class="mb-0"><strong>Total :</strong> <span class="fw-bold text-primary">{{ order.subtotal }} TND</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive mt-4">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-primary">
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Nom</th>
+                                    <th>Quantité</th>
+                                    <th>Prix</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in order.items %}
+                                    <tr class="border-top">
+                                        <td class="py-3"><img src="{{ item.image ?? '—'  }}" alt="Produit" class="rounded" style="width: 80px; height: 80px; object-fit: cover;"></td>
+                                        <td class="fw-bold">{{ item.title ?? '—' }}</td>
+                                        <td>
+                                            <span class="badge bg-primary rounded-pill px-3 py-2">{{ item.quantity ?? 1 }}</span>
+                                        </td>
+                                        <td class="fw-bold">{{ item.price ?? '—' }} TND</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
